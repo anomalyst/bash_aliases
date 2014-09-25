@@ -1,11 +1,21 @@
 export BAL=bash_aliases
+# set vitual machine host to standard if not overridden from env
+if [  X$VMH=="X" ]; then export VMH=vmh1 ; fi
+
 # based on  https://gist.github.com/ckorn/4999102
 function authme() {
 #	AK=authorized keys
 #	ET=encryption type
 #	KF=Key File
-  SSHAK=.ssh/authorized_keys
-  SSHET=ecdsa
+  SSHEE=ecdsa			# Elliptical Encryption
+  SSHET=$SSHEE			# Encryption Type
+  SSHEB=2048			# Encryption Bits (RSA default)
+  SSHAK=.ssh/authorized_keys	# Authorized Keys path
+		
+  if [ $SSHET == $SSHEE ]	#?-elliptical encryption?
+  then
+	SSHEB=521		#y-max bits on elliptical is 521
+  fi
   SSHKF=~/.ssh/id_$SSHET.pub
 # change the above ~/.ssh/*.pub to the path of your public key file.
 
@@ -13,7 +23,7 @@ function authme() {
   mkdir -p ~/.ssh
 #
 # create new key with max bits when we need one
-  if [ ! -e $SSHKF ]; then ssh-keygen -t $SSHET -b 521; fi
+  if [ ! -e $SSHKF ]; then ssh-keygen -t $SSHET -b $SSHSZ; fi
   
 #	pipe the created key file across to remote host
 #	and concatinate it with existing keys on remote host
@@ -92,12 +102,13 @@ function pull-req() {
 }
 
 function gif-ify(){
-  if [[ -n "$1" && -n "$2" ]]; then
-    ffmpeg -i $1 -pix_fmt rgb24 temp.gif
-    convert -layers Optimize temp.gif $2
-    rm temp.gif
+  if [ -n "$1" && -n "$2" ]
+  then
+	ffmpeg -i $1 -pix_fmt rgb24 temp.gif
+	convert -layers Optimize temp.gif $2
+	rm temp.gif
   else
-    echo "proper usage: gif-ify <input_movie.mov> <output_file.gif>. You DO need to include extensions."
+	echo "proper usage: gif-ify <input_movie.mov> <output_file.gif>. You DO need to include extensions."
   fi
 }
 
@@ -124,13 +135,15 @@ alias dir="ls"			# list of files
 alias md="mkdir"		# name of new dir
 alias rd="rmdir"		# name of dir
 alias rename="mv"		# name file -- dir and new rename file
+alias vssh="ssh $VMH"		# connect to virtual machine host 1
 alias vial='vi ~/.$BAL'
-alias putvs='rsync --links -avu ~/vault/scripts/ vmh1:~/vault/scripts/' 
-alias getvs='rsync --links -au vmh1:~/vault/scripts/ ~/vault/scripts/'
+alias putvs='rsync --links -avu ~/vault/scripts/ $VMH:~/vault/scripts/' 
+alias getvs='rsync --links -au $VMH:~/vault/scripts/ ~/vault/scripts/'
 alias putal='cp ~/.$BAL ~/$BAL && scp ~/.$BAL vmh1:~/'
-alias getal='scp vmh1:~/.$BAL ~/'
-alias putrc='scp ~/.bashrc vmh1:~/'
-alias getrc='scp vmh1:~/.bashrc ~/'
+alias getal='scp $VMH:~/.$BAL ~/'
+alias gital='(cd ~/git/$BAL && cp ~/.$BAL $BAL && git add .)'
+alias putrc='scp ~/.bashrc $VMH:~/'
+alias getrc='scp $VMH:~/.bashrc ~/'
 # Ubuntu package control
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
@@ -168,7 +181,8 @@ alias subv='sudo btrfs'			#sudo btrfs
 alias lsbv='sudo btrfs filesystem show'	#show btrfs volumes
 alias dfbv='sudo btrfs filesystem df'	#show btrfs volumes free space
 
-alias rcl='script ~/cmds/CMDS`date +%F`'	#record command line stuff
+alias lsblk='sudo blkid -s LABEL -s TYPE'	#show partition list
+alias rcl='script ~/cmds/CMDS`date +%F`'	#record command line stuf
 alias mount='sudo mount'			#mount with correct EID
 alias umount='sudo umount'			#unmount with correct EID
 alias msd='mount | grep --color=never v/sd'	#show mounted partitions
