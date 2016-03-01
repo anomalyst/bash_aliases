@@ -178,10 +178,10 @@ alias sls='systemctl list-units'	# show services,
 					# systemd journal queries & equivalents
 alias jc='journalctl'			# less /var/log/messages
 alias jcl='journalctl'			# less /var/log/messages
-alias jcf='journalctl -f'		# tail -f /var/log/messages
-alias jcg='journalctl --unit named.service'	# grep named /var/log/messages
 alias jcb='journalctl -b'		# Shows logs from current boot
-alias jcc='journalctl --full --catalog --lines=9'
+alias jcf='journalctl -f'		# tail -f /var/log/messages
+alias jcg='jc --unit named.service'	# grep named /var/log/messages
+alias jcc='jc -f --catalog --lines=9'
 alias v='vim'				#use vim over vi if there
 alias sv='sudo vim'			#sudo vim over vi if there
 alias subv='sudo btrfs'			#sudo btrfs
