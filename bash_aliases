@@ -49,6 +49,14 @@ function qsvirsh() {
 virsh -c qemu+ssh://$USER@$1/system
 }
 
+function gital() {
+	cd ~/git/$BAL
+	cp ~/.$BAL $BAL
+	git add .
+	git commit
+	git push origin source 
+}
+
 function gitblog() {
 cd ~/octopress
 rake generate
@@ -141,7 +149,6 @@ alias putvs='rsync --links -avu ~/vault/scripts/ $VMH:~/vault/scripts/'
 alias getvs='rsync --links -au $VMH:~/vault/scripts/ ~/vault/scripts/'
 alias putal='cp ~/.$BAL ~/$BAL && scp ~/.$BAL vmh1:~/'
 alias getal='scp $VMH:~/.$BAL ~/'
-alias gital='(cd ~/git/$BAL && cp ~/.$BAL $BAL && git add .)'
 alias putrc='scp ~/.bashrc $VMH:~/'
 alias getrc='scp $VMH:~/.bashrc ~/'
 # Ubuntu package control
@@ -186,9 +193,9 @@ alias rcl='script ~/cmds/CMDS`date +%F`'	#record command line stuf
 alias mount='sudo mount'			#mount with correct EID
 alias umount='sudo umount'			#unmount with correct EID
 alias msd='mount | grep --color=never v/sd'	#show mounted partitions
-alias ssdd='systemctl status  dhcpd.service'	#redo dhcp/dns
-alias ssdd='systemctl status  named.service'	#redo dhcp/dns
-alias scdd='systemctl restart dhcpd.service'	#redo dhcp/dns
-alias scdd='systemctl restart named.service'	#redo dhcp/dns
+alias ssdh='systemctl status  dhcpd.service'	#redo dhcp/dns
+alias ssdh='systemctl status  named.service'	#redo dhcp/dns
+alias srdh='systemctl restart dhcpd.service'	#redo dhcp/dns
+alias srdn='systemctl restart named.service'	#redo dhcp/dns
 alias scps='sudo systemctl restart privoxy.service'	#redo proxy server
     
