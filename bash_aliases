@@ -163,6 +163,7 @@ alias acsh='apt-cache show'
 alias acp='apt-cache policy'
 alias clean='sudo apt-get clean && sudo apt-get autoclean && sudo apt-get dist-clean && sudo apt-get autoremove'
 alias upgrade='sudo apt-get update && sudo apt-get upgrade && sudo apt-get clean'
+alias lud="sudo dnf update"		#get current updates
 alias dpi='sudo dpkg -i'
 alias dps='dpkg -S'
 alias dpc='dpkg -c'
